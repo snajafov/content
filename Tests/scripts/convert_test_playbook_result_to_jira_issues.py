@@ -131,7 +131,7 @@ def main():
         logging.info(f"\tMax failures to handle: {options.max_failures_to_handle}")
         logging.info(f"\tBuild number: {options.build_number}")
 
-        jira_server = JIRA(JIRA_SERVER_URL, token_auth=JIRA_API_KEY, options={'verify': JIRA_VERIFY_SSL})
+        jira_server = JIRA(f'{JIRA_SERVER_URL}?os_authType=basic', token_auth=JIRA_API_KEY, options={'verify': JIRA_VERIFY_SSL})
         jira_server_info = jira_server_information(jira_server)
         server_url = jira_server_info["baseUrl"]
 

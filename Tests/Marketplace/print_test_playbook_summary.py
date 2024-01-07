@@ -83,7 +83,7 @@ def print_test_playbooks_summary(artifacts_path: Path, without_jira: bool) -> bo
         logging.info(f"\tJira issue type: {JIRA_ISSUE_TYPE}")
         logging.info(f"\tJira component: {JIRA_COMPONENT}")
         logging.info(f"\tJira labels: {', '.join(JIRA_LABELS)}")
-        jira_server = JIRA(JIRA_SERVER_URL, token_auth=JIRA_API_KEY, options={'verify': JIRA_VERIFY_SSL})
+        jira_server = JIRA(f'{JIRA_SERVER_URL}?os_authType=basic', token_auth=JIRA_API_KEY, options={'verify': JIRA_VERIFY_SSL})
         jira_server_info = jira_server_information(jira_server)
         server_url = jira_server_info["baseUrl"]
 
