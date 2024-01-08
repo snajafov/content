@@ -209,7 +209,7 @@ def get_indicators_from_incident_ids(ids: list[str]) -> list[dict]:
     """
     ids_string = []
     for id_ in ids:
-        ids_string.append('incident.id: "%s"' % id_)
+        ids_string.append('investigationIDs: "%s"' % id_)
     query = " OR ".join(ids_string)
     res = demisto.executeCommand('findIndicators', {
         'query': query
@@ -479,7 +479,7 @@ def get_incidents_ids_related_to_indicators(indicators, query):
 
 def get_ids_condition_clause(incident_ids):
     if incident_ids:
-        return "incident.id:(" + " ".join(incident_ids) + ")"
+        return "investigationIDs:(" + " ".join(incident_ids) + ")"
     return ""
 
 
