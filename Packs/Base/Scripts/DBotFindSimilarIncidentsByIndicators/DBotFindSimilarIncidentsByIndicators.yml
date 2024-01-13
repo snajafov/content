@@ -45,5 +45,5 @@ type: python
 dockerimage: demisto/ml:1.0.0.84229
 runas: DBotWeakRole
 tests:
-- Default - Test
+- No tests (auto formatted)
 fromversion: 5.0.0

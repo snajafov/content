@@ -1499,7 +1499,8 @@
                 "ThreatQ v2",
                 "Core REST API"
             ],
-            "fromversion": "5.0.0"
+            "fromversion": "5.0.0",
+            "toversion": "7.9.9"
         },
         {
             "integrations": "SCADAfence CNM",
