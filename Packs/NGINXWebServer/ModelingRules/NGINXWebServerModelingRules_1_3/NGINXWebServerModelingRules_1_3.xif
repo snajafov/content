@@ -21,7 +21,8 @@ filter _raw_log contains "GET" or _raw_log contains "HEAD" or _raw_log contains 
 	xdm.network.http.response_code=statuscode,
     xdm.source.user.username = Username;
 
- alter log_level = arrayindex(regextract(_raw_log,"\[(\w+)\]"),0),
+filter 
+ | alter log_level = arrayindex(regextract(_raw_log,"\[(\w+)\]"),0),
     Tid = arrayindex(regextract(_raw_log,"\#(\d+)"),0),
     cid = arrayindex(regextract(_raw_log,"\*(\d+)"),0),
     uri = arrayindex(regextract(_raw_log,"open\(\)\s\"?([^\s]+)"),0),
