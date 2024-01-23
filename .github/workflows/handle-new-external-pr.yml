@@ -11,6 +11,9 @@ jobs:
     runs-on: ubuntu-latest
     if: github.repository == 'demisto/content' && github.event.action == 'opened' && github.event.pull_request.head.repo.fork == true && contains(github.head_ref, 'xsoar-bot-contrib-ContributionTestPack') == false
     steps:
+      - name: set pythonpath
+        run: |
+          echo "PYTHONPATH=$GITHUB_WORKSPACE" >> $GITHUB_ENV
       - name: Checkout
         uses: actions/checkout@v4
         with:
