@@ -524,10 +524,13 @@ def split_notes(raw_notes, note_type, time_info):
         if not created_on or not created_by:
             raise Exception(f'Failed to extract the required information from the following note: {note_info} - {note_value}')
 
+        demisto.debug(f"SN- created_on: {created_on}, created_by: {created_by}")
         # convert note creation time to UTC
         try:
             display_date_format = time_info.get('display_date_format')
+            demisto.debug(f"SN- display_date_format before format created_on: {display_date_format}, created_on= {created_on}")
             created_on_UTC = datetime.strptime(created_on, display_date_format) + time_info.get('timezone_offset')
+            demisto.debug(f"SN- created_on_UTC: {created_on_UTC}")
         except ValueError as e:
             raise Exception(f'Failed to convert {created_on} to a datetime object. Error: {e}')
 
@@ -542,6 +545,7 @@ def split_notes(raw_notes, note_type, time_info):
             "element": note_type
         }
         notes.append(note_dict)
+        demisto.debug(f"SN- note_dict: {note_dict}")
     return notes
 
 
@@ -554,6 +558,7 @@ def convert_to_notes_result(full_response, time_info):
 
     timezone_offset = get_timezone_offset(full_response, time_info.get('display_date_format'))
     time_info['timezone_offset'] = timezone_offset
+    demisto.debug(f"SN- time_info: {time_info}")
 
     all_notes = []
     raw_comments = full_response.get('result', {}).get('comments', {}).get('display_value', '')
@@ -1502,10 +1507,12 @@ def get_ticket_notes_command(client: Client, args: dict) -> tuple[str, dict, dic
     if use_display_value:  # make query using sysparm_display_value=all (requires less permissions)
         assert client.display_date_format, 'A display date format must be selected in the instance configuration when' \
                                            ' retrieving notes using the display value option.'
+        demisto.debug(f"SN- use_display_value: {use_display_value}, client.display_date_format: {client.display_date_format}")
         ticket_type = client.get_table_name(str(args.get('ticket_type', client.ticket_type)))
         path = f'table/{ticket_type}/{ticket_id}'
         query_params = {'sysparm_limit': sys_param_limit, 'sysparm_offset': sys_param_offset, 'sysparm_display_value': 'all'}
         full_result = client.send_request(path, 'GET', params=query_params)
+        demisto.debug(f"SN- full_result: {full_result}")
         result = convert_to_notes_result(full_result, time_info={'display_date_format': client.display_date_format})
     else:
         sys_param_query = f'element_id={ticket_id}^element=comments^ORelement=work_notes'
@@ -2364,15 +2371,20 @@ def get_timezone_offset(full_response, display_date_format):
     """
     try:
         local_time = full_response.get('result', {}).get('sys_created_on', {}).get('display_value', '')
+        demisto.debug(f"SN- local_time before format: {local_time}")
         local_time = datetime.strptime(local_time, display_date_format)
+        demisto.debug(f"SN- local_time afer format: {local_time}")
     except Exception as e:
         raise Exception(f'Failed to get the display value offset time. ERROR: {e}')
     try:
         utc_time = full_response.get('result', {}).get('sys_created_on', {}).get('value', '')
+        demisto.debug(f"SN- utc_time before format: {utc_time}")
         utc_time = datetime.strptime(utc_time, DATE_FORMAT)
+        demisto.debug(f"SN- utc_time after format: {utc_time}")
     except ValueError as e:
         raise Exception(f'Failed to convert {utc_time} to datetime object. ERROR: {e}')
     offset = utc_time - local_time
+    demisto.debug(f"SN- offset: {offset}")
     return offset
 
 
