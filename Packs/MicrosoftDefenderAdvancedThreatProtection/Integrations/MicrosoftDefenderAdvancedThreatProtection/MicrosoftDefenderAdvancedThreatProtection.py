@@ -5201,6 +5201,7 @@ def run_polling_command(client: MsClient, args: dict, cmd: str, action_func: Cal
 
     """
     ScheduledCommand.raise_error_if_not_supported()
+    demisto.debug(f"polling with {cmd=}, {args=!s}")
     interval_in_secs = int(args.get('interval_in_seconds', 10))
     timeout_in_seconds = int(args.get('timeout_in_seconds', 600))
 
@@ -5226,8 +5227,9 @@ def run_polling_command(client: MsClient, args: dict, cmd: str, action_func: Cal
 
     # not a first run
     command_result = results_function(client, args)
+    demisto.debug(str(command_result))
     action_status = command_result.outputs.get("status")
-    demisto.debug(f"action status is: {action_status}")
+    demisto.debug(f"{action_status=}")
 
     # In case command is one of the put/get file/ run script there is command section, otherwise there isnt.
     if command_result.outputs.get("commands", []):
@@ -5242,13 +5244,13 @@ def run_polling_command(client: MsClient, args: dict, cmd: str, action_func: Cal
         raise Exception(error_msg)
 
     elif command_status != 'Completed' or action_status in ('InProgress', 'Pending'):
-        demisto.debug("action status is not completed")
         # schedule next poll
         polling_args = {
             'interval_in_seconds': interval_in_secs,
             'polling': True,
             **args
         }
+        demisto.debug(f"action status of is not completed, scheduling next poll with {interval_in_secs=}")
 
         scheduled_command = ScheduledCommand(
             command=cmd,
@@ -5404,7 +5406,9 @@ def get_live_response_file_action(client, args):
     }
 
     # create action:
+    demisto.debug(f"calling get_live_response_file_action with {args=}")
     res = client.create_action(machine_id, request_body, overwrite_rate_limit_retry=True)
+    demisto.debug(f"action_id={res['id']}")
     md = tableToMarkdown('Processing action. This may take a few minutes.', res['id'], headers=['id'])
 
     return CommandResults(
