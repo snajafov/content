@@ -3,7 +3,7 @@ sectionOrder:
 - Connect
 - Collect
 commonfields:
-  id: HelloWorld
+  id: HelloWorld 
   version: -1
 configuration:
 - additionalinfo: Reliability of the source providing the intelligence data.
@@ -88,7 +88,7 @@ configuration:
   advanced: true
 description: This is the Hello World integration for getting started.
 display: HelloWorld
-name: HelloWorld
+name: HelloWorld 
 script:
   commands:
   - arguments:
