@@ -72,7 +72,7 @@ configuration:
   required: false
 description: A search engine used for searching Internet-connected devices.
 display: Shodan v2
-name: Shodan_v2
+name: Shodan_v211111
 script:
   commands:
   - arguments:
